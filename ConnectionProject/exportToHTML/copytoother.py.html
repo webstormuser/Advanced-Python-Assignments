@@ -1,0 +1,56 @@
+<html>
+<head>
+<title>copytoother.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+copytoother.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">os</span>
+<span class="s0">import </span><span class="s1">shutil</span>
+<span class="s0">import </span><span class="s1">logging</span>
+
+<span class="s2">'''logging.basicConfig(filename='copy.log', 
+                    format='%(asctime)s %(name)s %(levelname)s %(message)s', 
+                    level=logging.DEBUG, 
+                    filemode='w', 
+                    datefmt='%Y-%m-%d %H:%M:%S')'''</span>
+<span class="s1">logging.basicConfig(filename=</span><span class="s2">'copy.log'</span><span class="s0">, </span><span class="s1">level=logging.INFO</span><span class="s0">,</span>
+                    <span class="s1">format=</span><span class="s2">'%(asctime)s %(name)s-%(levelname)s-%(message)s'</span><span class="s0">, </span><span class="s1">filemode=</span><span class="s2">'w'</span><span class="s1">)</span>
+<span class="s1">logger = logging.getLogger()</span>
+<span class="s1">logger.setLevel(logging.INFO)</span>
+
+
+<span class="s0">class </span><span class="s1">CopyData:</span>
+    <span class="s0">def </span><span class="s1">__init__(self</span><span class="s0">, </span><span class="s1">folder</span><span class="s0">, </span><span class="s1">extensions</span><span class="s0">, </span><span class="s1">destFolder):</span>
+        <span class="s1">self.folder = os.path.abspath(folder)</span>
+        <span class="s1">self.extensions = extensions</span>
+        <span class="s1">self.destFolder = os.path.abspath(destFolder)</span>
+
+    <span class="s0">def </span><span class="s1">selectiveCopy(self):</span>
+        <span class="s0">try</span><span class="s1">:</span>
+            <span class="s1">logger.info(</span><span class="s2">'Looking in'</span><span class="s0">, </span><span class="s1">self.folder</span><span class="s0">, </span><span class="s2">'for files with extensions of'</span><span class="s0">, </span><span class="s2">', '</span><span class="s1">.join(self.extensions))</span>
+            <span class="s0">for </span><span class="s1">foldername</span><span class="s0">, </span><span class="s1">subfolders</span><span class="s0">, </span><span class="s1">filenames </span><span class="s0">in </span><span class="s1">os.walk(self.folder):</span>
+                <span class="s0">for </span><span class="s1">filename </span><span class="s0">in </span><span class="s1">filenames:</span>
+                    <span class="s1">name</span><span class="s0">, </span><span class="s1">extension = os.path.splitext(filename)</span>
+                    <span class="s0">if </span><span class="s1">extension </span><span class="s0">in </span><span class="s1">self.extensions:</span>
+                        <span class="s1">fileAbsPath = foldername + os.path.sep + filename</span>
+                        <span class="s1">logger.info(</span><span class="s2">'Coping'</span><span class="s0">, </span><span class="s1">fileAbsPath</span><span class="s0">, </span><span class="s2">'to'</span><span class="s0">, </span><span class="s1">self.destFolder)</span>
+                        <span class="s1">shutil.copy(fileAbsPath</span><span class="s0">, </span><span class="s1">self.destFolder)</span>
+        <span class="s0">except </span><span class="s1">Exception </span><span class="s0">as </span><span class="s1">e:</span>
+            <span class="s1">logger.error(e)</span>
+
+
+<span class="s1">c = CopyData(</span><span class="s2">'sourceFolder'</span><span class="s0">, </span><span class="s1">[</span><span class="s2">'.pdf'</span><span class="s0">, </span><span class="s2">'.xlsx'</span><span class="s1">]</span><span class="s0">, </span><span class="s2">'selectiveFolder'</span><span class="s1">)</span>
+<span class="s1">c.selectiveCopy()</span>
+</pre>
+</body>
+</html>
